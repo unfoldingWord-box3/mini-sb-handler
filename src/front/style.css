@@ -1,0 +1,17 @@
+html {
+    color: darkblue;
+    background-color: whitesmoke;
+}
+
+body {
+    text-align: center;
+}
+
+button {
+    background-color: darkgrey;
+    color: white;
+    padding: 1em 1em;
+
+    text-align: center;
+    outline: none;
+}
