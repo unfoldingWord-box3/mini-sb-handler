@@ -1,7 +1,11 @@
 const fs = require("fs")
+const fse = require('fs-extra')
+const path = require("path")
 const http = require("http")
 const url = require("url")
+const {Worker} = require('node:worker_threads');
 
+const verifyDir = "./test/scribu-test-FR_LSG"
 
 function callHandler(fNameStr,type,id,response){
     console.log("calling: "+id)
@@ -54,6 +58,20 @@ function start(route, handle){
     }
     http.createServer(onRequest).listen(8080)
     console.log("Server running.")
+}
+
+// Read from test directory (verifyDir)
+try {
+    const checkFName = path.join(verifyDir, "metadata.json")
+    if (fse.pathExistsSync(checkFName)) {
+
+        const worker = new Worker('./src/lib/sbHandlerWorker.js');
+        worker.on('message', e => console.log(e));
+        worker.on('error', e => console.log(e));
+        worker.postMessage(checkFName);
+    }
+} catch (err) {
+    console.log("Scripture Burrito worker error: ", err.message);
 }
 
 start(route, handle)
